@@ -2,6 +2,8 @@
 
 A simple game built using signals inside SolidJS that is loosely based on a game I played when I was young that I can't find anywhere.
 
+Play it here: https://joshthompson.github.io/dino-game/
+
 ## Usage
 
 Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
