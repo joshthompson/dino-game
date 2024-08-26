@@ -1,0 +1,73 @@
+body {
+  margin: 0;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  width: calc(var(--cell-size) * var(--width));
+  background: black;
+  color: white;
+  text-align: center;
+
+  --cell-size: min(16px, calc((100vh - 77px) * 0.02));
+}
+
+body {
+  display: flex;
+  width: 100svw;
+  height: 100svh;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  margin: 0;
+}
+
+header, footer {
+  padding: 1rem;
+}
+
+main {
+  width: calc(var(--cell-size) * var(--width));
+  height: calc(var(--cell-size) * var(--height));
+  outline: 2px solid white;
+  outline-offset: 3px;
+}
+
+.splash-text {
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(calc(var(--level) * 77deg) 70% 80%);
+  color: hsl(calc(180deg + var(--level) * 77deg) 92% 75%);
+  font-size: 3rem;
+  width: 100%;
+  height: 100%;
+
+  &[data-subtype='game-over'] {
+    background: black;
+    color: white;
+  }
+}
+
+.game-grid {
+  background-color: white;
+  display: grid;
+  grid-template-columns: repeat(var(--width), var(--cell-size));
+  grid-template-rows: repeat(var(--height), var(--cell-size));
+  width: 100%;
+  height: 100%;
+
+  [data-cell] {
+    background: hsl(calc(var(--level) * 77deg) 70% 80%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(0.9 * var(--cell-size));
+  }
+
+  [data-cell='💧'] {
+    font-size: 0;
+    background: hsl(calc(143deg + var(--level) * 77deg) 92% 75%);
+  }
+}
+
