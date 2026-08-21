@@ -77,15 +77,14 @@ main {
 /*
  * The desktop gives the game a window of whatever shape it likes, so the board is
  * sized off whichever axis runs out first. That keeps the grid's own 50x40 proportions
- * — square cells, nothing stretched — while filling as much of the window as will
- * take it. The 12px covers the outline main draws around itself, which would otherwise
- * be cropped off against the edge of the frame.
+ * — square cells, nothing stretched — while filling every pixel of the window that
+ * will take it.
  */
 .game-box[data-embedded] {
   --bar: 30px;
   --cell-size: min(
-    calc((100svw - 12px) / var(--width)),
-    calc((100svh - var(--bar) - 12px) / var(--height))
+    calc(100svw / var(--width)),
+    calc((100svh - var(--bar)) / var(--height))
   );
 
   width: 100svw;
@@ -94,8 +93,13 @@ main {
   flex-direction: column;
 }
 
-/* Auto margins centre the board in whatever room is left over on the loose axis. */
+/*
+ * The window's own frame is border enough, so the outline the board draws around
+ * itself standalone goes — and with it the gap of black page it was offset into.
+ * Auto margins centre the board in whatever room is left over on the loose axis.
+ */
 .game-box[data-embedded] main {
+  outline: none;
   margin: auto;
 }
 
