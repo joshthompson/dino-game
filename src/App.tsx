@@ -2,6 +2,18 @@ import { createSignal, type Component, Show, Index } from 'solid-js';
 
 import styles from './App.module.css';
 import { Grid, Maze, Mode, Tile } from './models';
+import { embedded, onMenu, setMenus, showText } from './os';
+
+/** What the About window says. Josh OS draws it; these are only the words. */
+const RULES = `Push crates onto the men. That is the whole game.
+
+Move with the arrow keys or WASD, one square per press. The world takes a step of its own every half second whether you move or not, so standing still is still a decision.
+
+📦 A crate slides when you push it, and pushes the crates behind it if there is room.
+👨 A man walks towards you every step, and reaching you ends the game.
+💧 Water stops everyone, you included.
+
+A crate pushed onto a man squashes him and scores 10. Clear every man on a level to move on to the next, which has twice as many of them.`;
 
 const App: Component = () => {
 
@@ -300,10 +312,40 @@ const App: Component = () => {
 
   startLevel(1);
 
+  // Framed in Josh OS: hand it a menu bar, and answer whatever gets picked off it.
+  // Played on its own, all of this is a no-op and the game never knows the difference.
+  setMenus([
+    {
+      label: 'Game',
+      items: [
+        { id: 'new-game', label: 'New Game' },
+        { id: 'restart-level', label: 'Restart Level' },
+      ],
+    },
+    { label: 'Help', items: [{ id: 'about', label: 'About' }] },
+  ]);
+
+  onMenu(id => {
+    if (id === 'new-game') {
+      setScore(0);
+      startLevel(1);
+    }
+    if (id === 'restart-level') startLevel(level());
+    if (id === 'about') showText('About Dino Game', RULES);
+  });
+
   return (
-    <div style={{ '--width': `${width}`, '--height': `${height}`, '--level': `${level()}` }} class='game-box'>
-      <h1>Dino Game</h1>
-      <header>Level: {level()} • Score: {score()} • Highscore: {highscore()}</header>
+    <div
+      style={{ '--width': `${width}`, '--height': `${height}`, '--level': `${level()}` }}
+      class='game-box'
+      // Framed, the game fills the window it is given, keeping the grid's shape, and
+      // the numbers move to a bar along the bottom.
+      data-embedded={embedded() || undefined}
+    >
+      <Show when={!embedded()}>
+        <h1>Dino Game</h1>
+        <header>Level: {level()} • Score: {score()} • Highscore: {highscore()}</header>
+      </Show>
       <main>
         <Show when={mode().type === 'text'}>
           <div class="splash-text" data-subtype={mode().subtype}>
@@ -318,7 +360,13 @@ const App: Component = () => {
           </div>
         </Show>
       </main>
-      <footer>Move 🦖 with arrow keys and push 📦 on 👨</footer>
+      <footer class={embedded() ? 'status-bar' : undefined}>
+        <Show when={embedded()} fallback={'Move 🦖 with arrow keys and push 📦 on 👨'}>
+          <span>Level: {level()}</span>
+          <span>Score: {score()}</span>
+          <span>Highscore: {highscore()}</span>
+        </Show>
+      </footer>
     </div>
   );
 };

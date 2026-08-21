@@ -71,3 +71,43 @@ main {
   }
 }
 
+
+/* Framed in Josh OS ------------------------------------------------------- */
+
+/*
+ * The desktop gives the game a window of whatever shape it likes, so the board is
+ * sized off whichever axis runs out first. That keeps the grid's own 50x40 proportions
+ * — square cells, nothing stretched — while filling as much of the window as will
+ * take it. The 12px covers the outline main draws around itself, which would otherwise
+ * be cropped off against the edge of the frame.
+ */
+.game-box[data-embedded] {
+  --bar: 30px;
+  --cell-size: min(
+    calc((100svw - 12px) / var(--width)),
+    calc((100svh - var(--bar) - 12px) / var(--height))
+  );
+
+  width: 100svw;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Auto margins centre the board in whatever room is left over on the loose axis. */
+.game-box[data-embedded] main {
+  margin: auto;
+}
+
+/* Level, score and highscore, along the bottom of the window. */
+.game-box[data-embedded] .status-bar {
+  flex: none;
+  height: var(--bar);
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  border-top: 1px solid #444;
+}
